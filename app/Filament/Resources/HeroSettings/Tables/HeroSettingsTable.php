@@ -1,0 +1,53 @@
+<?php
+
+namespace App\Filament\Resources\HeroSettings\Tables;
+
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use Filament\Actions\EditAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+
+class HeroSettingsTable
+{
+    public static function configure(Table $table): Table
+    {
+        return $table
+            ->columns([
+                // TextColumn::make('id')
+                //     ->label('ID')
+                //     ->sortable(),
+
+                TextColumn::make('slug')
+                    ->label('Slug (Keamanan)')
+                    ->copyable()
+                    ->searchable(),
+
+                TextColumn::make('title')
+                    ->label('Judul Utama')
+                    ->limit(50)
+                    ->searchable(),
+
+                TextColumn::make('title_accent')
+                    ->label('Highlight')
+                    ->limit(50)
+                    ->searchable(),
+
+                TextColumn::make('created_at')
+                    ->label('Dibuat')
+                    ->dateTime()
+                    ->sortable(),
+            ])
+            ->filters([
+                //
+            ])
+            ->recordActions([
+                EditAction::make(),
+            ])
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+}

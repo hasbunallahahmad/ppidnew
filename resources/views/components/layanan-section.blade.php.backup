@@ -1,0 +1,85 @@
+{{-- resources/views/components/layanan-section.blade.php --}}
+<section class="layanan-section" id="layanan">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-tag">Layanan Kami</div>
+            <h2 class="section-title">Akses Informasi <span>Publik dengan Mudah</span></h2>
+            <p class="section-desc">Temukan berbagai jenis informasi dan layanan yang tersedia untuk masyarakat Kota Semarang</p>
+        </div>
+
+        <div class="layanan-grid">
+
+            @php
+            $layanans = [
+                [
+                    'icon' => 'fas fa-newspaper',
+                    'color' => 'blue',
+                    'title' => 'Berita & Pengumuman',
+                    'desc' => 'Berita resmi, siaran pers, dan pengumuman terkini dari pemerintah Kota Semarang.',
+                    'count' => '248 artikel',
+                    'link' => '#',
+                ],
+                [
+                    'icon' => 'fas fa-chart-bar',
+                    'color' => 'green',
+                    'title' => 'Data & Statistik',
+                    'desc' => 'Data statistik kependudukan, ekonomi, kesehatan, dan pembangunan Kota Semarang.',
+                    'count' => '156 dataset',
+                    'link' => '#',
+                ],
+                [
+                    'icon' => 'fas fa-images',
+                    'color' => 'orange',
+                    'title' => 'Infografis',
+                    'desc' => 'Penyajian informasi dalam bentuk visual yang informatif dan mudah dipahami.',
+                    'count' => '89 infografis',
+                    'link' => '#',
+                ],
+                [
+                    'icon' => 'fas fa-table',
+                    'color' => 'teal',
+                    'title' => 'Tabel & Rekapitulasi',
+                    'desc' => 'Data rekapitulasi berbagai bidang dalam format tabel yang terstruktur.',
+                    'count' => '312 tabel',
+                    'link' => '#',
+                ],
+                [
+                    'icon' => 'fas fa-file-pdf',
+                    'color' => 'red',
+                    'title' => 'Dokumen Resmi',
+                    'desc' => 'Peraturan daerah, SK, LKPJ, APBD, dan berbagai dokumen resmi pemerintah.',
+                    'count' => '1.284 dokumen',
+                    'link' => '#',
+                ],
+                [
+                    'icon' => 'fas fa-video',
+                    'color' => 'purple',
+                    'title' => 'Video & Multimedia',
+                    'desc' => 'Konten video, siaran langsung, dan arsip multimedia kegiatan pemerintahan.',
+                    'count' => '64 video',
+                    'link' => '#',
+                ],
+            ];
+            @endphp
+
+            @foreach ($layanans as $item)
+            <div class="layanan-card layanan-{{ $item['color'] }}">
+                <div class="layanan-card-inner">
+                    <div class="layanan-icon">
+                        <i class="{{ $item['icon'] }}"></i>
+                    </div>
+                    <h3 class="layanan-title">{{ $item['title'] }}</h3>
+                    <p class="layanan-desc">{{ $item['desc'] }}</p>
+                    <div class="layanan-footer">
+                        <span class="layanan-count"><i class="fas fa-layer-group"></i> {{ $item['count'] }}</span>
+                        <a href="{{ $item['link'] }}" class="layanan-link">
+                            Lihat Semua <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+
+        </div>
+    </div>
+</section>
