@@ -3,8 +3,13 @@
 namespace App\Providers\Filament;
 
 use App\Filament\Pages\Auth\Login;
+use App\Helpers\PexelsHelper;
 use Arseno25\FilamentPrivacyBlur\FilamentPrivacyBlurPlugin;
+use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Carbon\Carbon;
+use Caresome\FilamentAuthDesigner\AuthDesignerPlugin;
+use Caresome\FilamentAuthDesigner\Data\AuthPageConfig;
+use Caresome\FilamentAuthDesigner\Enums\MediaPosition;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -21,7 +26,6 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use MWGuerra\FileManager\FileManagerPlugin;
 use Niladam\FilamentAutoLogout\AutoLogoutPlugin;
@@ -71,18 +75,38 @@ class PpidNewPusdaSmgPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->plugin(\MarcoGermani87\FilamentCaptcha\FilamentCaptcha::make())
+            // ->plugin(\MarcoGermani87\FilamentCaptcha\FilamentCaptcha::make())
             ->plugins([
+                FilamentShieldPlugin::make()
+                    ->modelLabel('Model')
+                    ->pluralModelLabel('Models')
+                    ->recordTitleAttribute('name')
+                    ->titleCaseModelLabel(false)
+                    ->navigationLabel('Roles & Permissions')
+                    ->navigationIcon('heroicon-o-shield-check')
+                    ->activeNavigationIcon('heroicon-s-home')
+                    ->navigationGroup('Settings')
+                    ->navigationBadgeColor('success')
+                    ->registerNavigation(true),
+                AuthDesignerPlugin::make()
+                    ->login(
+                        fn(AuthPageConfig $config) => $config
+                            ->usingPage(\App\Filament\Pages\Auth\Login::class)
+                            ->media(PexelsHelper::getDailyImage())
+                            ->mediaPosition(MediaPosition::Cover)
+                            ->blur('2'),
+                    )
+                    ->themeToggle(),
                 FilamentMenuManagerPlugin::make()
                     ->navigationGroup('Settings'),
                 AutoLogoutPlugin::make()
-                    ->color(Color::Emerald)                             // Set the color. Defaults to Color::Stone
-                    ->icon('heroicon-o-arrow-right-start-on-rectangle') // Change the icon. Defaults to 'heroicon-o-clock'
-                    ->disableIf(fn() => Auth::id() === 1)               // Disable the user with ID 1
-                    ->logoutAfter(Carbon::SECONDS_PER_MINUTE * 5)       // Logout the user after 5 minutes
-                    ->withoutWarning()                                  // Disable the warning before logging out
-                    ->withoutTimeLeft()                                 // Disable the time left
-                    ->timeLeftText('Oh no. Kicking you in...')          // Change the time left text
+                    ->color(Color::Emerald)
+                    ->icon('heroicon-o-arrow-right-start-on-rectangle')
+                    // ->disableIf(fn() => Auth::id() === 1)
+                    ->logoutAfter(Carbon::SECONDS_PER_MINUTE * 5)
+                    ->withoutWarning()
+                    ->withoutTimeLeft()
+                    ->timeLeftText('Nah kan , dianggurin sih jadi Force Logout :)')
                     ->timeLeftText(''),
                 FilamentPrivacyBlurPlugin::make()
                     ->defaultMode('blur_click'),

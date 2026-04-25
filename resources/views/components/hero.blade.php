@@ -33,11 +33,15 @@
             </p>
 
             <div class="hero-actions">
+                {{-- button_1_url sudah aman — menggunakan named route(), tidak dari DB --}}
                 <a href="{{ route('permohonan.form') }}" class="btn btn-primary btn-lg">
                     <i class="fas fa-paper-plane"></i>
                     {{ $heroSetting->button_1_text }}
                 </a>
-                <a href="{{ $heroSetting->button_2_url }}" class="btn btn-outline-white btn-lg">
+
+                {{-- FIX: button_2_url berasal dari DB, wajib divalidasi dengan safe_url()
+                     untuk mencegah injeksi javascript:, data:, vbscript: --}}
+                <a href="{{ safe_url($heroSetting->button_2_url) }}" class="btn btn-outline-white btn-lg">
                     <i class="fas fa-compass"></i>
                     {{ $heroSetting->button_2_text }}
                 </a>

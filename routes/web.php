@@ -53,21 +53,22 @@ Route::prefix('page')->name('page.')->group(function () {
  * Routes untuk pengajuan permohonan informasi publik
  */
 Route::prefix('permohonan')->name('permohonan.')->group(function () {
-    // Halaman cara permohonan
+
+    // Halaman statis — tidak perlu throttle
     Route::get('/cara', [PermohonanController::class, 'carePermohonan'])->name('care');
-
-    // Form pengajuan
     Route::get('/form', [PermohonanController::class, 'form'])->name('form');
-    Route::post('/store', [PermohonanController::class, 'store'])->name('store');
-
-    // Halaman sukses
     Route::get('/success', [PermohonanController::class, 'success'])->name('success');
 
-    // Cek status permohonan (dengan nomor tiket)
-    Route::get('/status/{nomorTiket}', [PermohonanController::class, 'checkStatus'])->name('status');
+    // Submit permohonan — throttle ketat (5x/jam)
+    Route::post('/store', [PermohonanController::class, 'store'])
+        ->middleware('throttle:permohonan')
+        ->name('store');
 
-    // Halaman cari berdasarkan nomor tiket (submenu)
-    Route::get('/lacak', [PermohonanController::class, 'lacakPermohonan'])->name('lacak');
+    // Lacak & cek status — throttle sedang (20x/menit)
+    Route::middleware('throttle:tracking')->group(function () {
+        Route::get('/lacak', [PermohonanController::class, 'lacakPermohonan'])->name('lacak');
+        Route::get('/status/{nomorTiket}', [PermohonanController::class, 'checkStatus'])->name('status');
+    });
 });
 
 Route::get('news/posts', [\App\Http\Controllers\NewsController::class, 'posts'])->name('news.posts');

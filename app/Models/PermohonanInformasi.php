@@ -83,23 +83,11 @@ class PermohonanInformasi extends Model
         });
 
         static::creating(function (PermohonanInformasi $permohonan) {
-            // Generate nomor tiket otomatis: PPID-YYYYMMDD-XXXX
             $permohonan->nomor_tiket = static::generateNomorTiket();
-
-            // Hitung deadline: +10 hari kerja dari sekarang (skip Sabtu & Minggu)
             $permohonan->deadline_at = static::hitungDeadline(now(), 10);
-
-            // Sanitize text fields untuk keamanan
-            $permohonan->nama_pemohon = static::sanitizeInput($permohonan->nama_pemohon);
-            $permohonan->alamat = static::sanitizeInput($permohonan->alamat);
-            $permohonan->informasi_diminta = static::sanitizeInput($permohonan->informasi_diminta);
-            $permohonan->tujuan_penggunaan = static::sanitizeInput($permohonan->tujuan_penggunaan);
-            $permohonan->catatan_admin = static::sanitizeInput($permohonan->catatan_admin);
-            $permohonan->alasan_penolakan = static::sanitizeInput($permohonan->alasan_penolakan);
         });
 
         static::updating(function (PermohonanInformasi $permohonan) {
-            // Set selesai_at otomatis saat status berubah ke 'selesai' atau 'ditolak'
             if (
                 $permohonan->isDirty('status')
                 && in_array($permohonan->status, ['selesai', 'ditolak'])
@@ -110,23 +98,39 @@ class PermohonanInformasi extends Model
 
             // Sanitize text fields saat update
             if ($permohonan->isDirty('catatan_admin')) {
-                $permohonan->catatan_admin = static::sanitizeInput($permohonan->catatan_admin);
+                $permohonan->catatan_admin = static::sanitizeAdminInput($permohonan->catatan_admin);
             }
             if ($permohonan->isDirty('alasan_penolakan')) {
-                $permohonan->alasan_penolakan = static::sanitizeInput($permohonan->alasan_penolakan);
+                $permohonan->alasan_penolakan = static::sanitizeAdminInput($permohonan->alasan_penolakan);
             }
         });
     }
     private static function generateSlug(): string
     {
         do {
-            // UUID-based slug, tidak ada info sensitif
             $slug = Str::uuid()->toString();
         } while (self::where('slug', $slug)->exists());
 
         return $slug;
     }
 
+    public static function generateNomorTiket(): string
+    {
+        do {
+            $nomor = 'PPID-' . date('Y') . '-' . strtoupper(Str::random(6));
+        } while (static::withTrashed()->where('nomor_tiket', $nomor)->exists());
+
+        return $nomor;
+    }
+
+    protected static function sanitizeAdminInput(?string $input): ?string
+    {
+        if ($input === null) {
+            return null;
+        }
+
+        return trim(strip_tags($input));
+    }
     // =========================================================
     // Security Helpers
     // =========================================================
@@ -201,26 +205,7 @@ class PermohonanInformasi extends Model
      * Generate nomor tiket unik format: PPID-YYYYMMDD-XXXX
      * Contoh: PPID-20250317-0042
      */
-    public static function generateNomorTiket(): string
-    {
-        $today  = now()->format('Ymd');
-        $prefix = "PPID-{$today}-";
 
-        // Cari nomor urut tertinggi hari ini
-        $lastToday = static::withTrashed()
-            ->where('nomor_tiket', 'like', "{$prefix}%")
-            ->orderByDesc('nomor_tiket')
-            ->value('nomor_tiket');
-
-        if ($lastToday) {
-            $lastSeq = (int) substr($lastToday, -4);
-            $seq     = $lastSeq + 1;
-        } else {
-            $seq = 1;
-        }
-
-        return $prefix . str_pad($seq, 4, '0', STR_PAD_LEFT);
-    }
 
     /**
      * Hitung deadline kerja (+N hari kerja, skip Sabtu & Minggu).

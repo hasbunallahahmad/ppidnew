@@ -41,7 +41,7 @@
                                                             @foreach ($row['items'] as $item)
                                                                 <li>
                                                                     @if (!empty($item['url']) && $item['url'] !== '#')
-                                                                        <a href="{{ $item['url'] }}"
+                                                                        <a href="{{ safe_url($item['url']) }}"
                                                                             @if (str_starts_with($item['url'], 'http')) target="_blank" rel="noopener noreferrer" @endif>
                                                                             {{ $item['label'] }}
                                                                         </a>
@@ -52,7 +52,13 @@
                                                             @endforeach
                                                         </ul>
                                                     @elseif (!empty($row['keterangan']))
-                                                        {!! $row['keterangan'] !!}
+                                                        {{--
+                                                            FIX: keterangan adalah plain text dari JSON admin.
+                                                            Gunakan {{ }} untuk escape — tidak perlu render HTML.
+                                                            Jika di masa depan butuh format HTML (bold, link),
+                                                            ganti ke: {!! clean($row['keterangan']) !!}
+                                                        --}}
+                                                        {{ $row['keterangan'] }}
                                                     @endif
                                                 </td>
                                             </tr>
@@ -74,7 +80,7 @@
                                                                 @foreach ($sub['items'] as $item)
                                                                     <li>
                                                                         @if (!empty($item['url']) && $item['url'] !== '#')
-                                                                            <a href="{{ $item['url'] }}"
+                                                                            <a href="{{ safe_url($item['url']) }}"
                                                                                 @if (str_starts_with($item['url'], 'http')) target="_blank" rel="noopener noreferrer" @endif>
                                                                                 {{ $item['label'] }}
                                                                             </a>
@@ -85,7 +91,11 @@
                                                                 @endforeach
                                                             </ul>
                                                         @elseif (!empty($sub['keterangan']))
-                                                            {!! $sub['keterangan'] !!}
+                                                            {{--
+                                                                FIX: sama seperti $row['keterangan'] di atas —
+                                                                plain text, cukup escaped dengan {{ }}
+                                                            --}}
+                                                            {{ $sub['keterangan'] }}
                                                         @endif
                                                     </td>
                                                 </tr>
@@ -97,8 +107,9 @@
                         </div>
                     </div>
                 @elseif ($page->content)
+                    {{-- FIX: sanitasi HTML rich text editor dengan clean() / HTMLPurifier --}}
                     <div class="mt-4 prose">
-                        {!! $page->content !!}
+                        {!! clean($page->content) !!}
                     </div>
                 @endif
             </div>

@@ -9,8 +9,11 @@
                     <p class="lead">{{ $page->description }}</p>
 
                     @if ($page->content)
+                        {{-- FIX: sanitasi HTML rich text editor dengan clean() / HTMLPurifier.
+                             File ini adalah template generik yang dipakai banyak halaman menu,
+                             sehingga perbaikan di satu titik ini berdampak luas. --}}
                         <div class="page-content-body mt-4">
-                            {!! $page->content !!}
+                            {!! clean($page->content) !!}
                         </div>
                     @endif
 
@@ -49,7 +52,7 @@
                         <ul>
                             <li><a href="/">Beranda</a></li>
                             <li><a href="/page/tentang-dinas">Tentang Dinas</a></li>
-                            <li><a href="/page/visi-misi">Visi & Misi</a></li>
+                            <li><a href="/page/visi-misi">Visi &amp; Misi</a></li>
                             <li><a href="/page/dasar-hukum">Dasar Hukum</a></li>
                         </ul>
                     </div>

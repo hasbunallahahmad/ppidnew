@@ -28,7 +28,9 @@
                                     </tr>
                                     @foreach ($section['items'] as $item)
                                         @php
-                                            $url = $item['url'] ?? '#';
+                                            $rawUrl = $item['url'] ?? '#';
+                                            // FIX: validasi URL dari JSON admin sebelum dirender
+                                            $url = safe_url($rawUrl, '#');
                                             $isExternal = str_starts_with($url, 'http');
                                             $isDisabled = $url === '#';
                                             $btnClass = $isDisabled
@@ -57,8 +59,9 @@
 
                     {{-- Fallback ke content HTML lama jika structured_content belum ada --}}
                 @elseif ($page->content)
+                    {{-- FIX: sanitasi HTML rich text editor dengan clean() / HTMLPurifier --}}
                     <div class="info-periodic mt-4 prose">
-                        {!! $page->content !!}
+                        {!! clean($page->content) !!}
                     </div>
                 @endif
 

@@ -79,7 +79,7 @@
 
                         {{-- Konten --}}
                         <div style="font-size: 0.95rem; color: #333; line-height: 1.8;" class="news-content">
-                            {!! $post->content !!}
+                            {!! clean($post->content) !!}
                         </div>
                     </div>
                 </article>

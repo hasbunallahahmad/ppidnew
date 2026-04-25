@@ -34,21 +34,36 @@
                     </div>
                     <div class="ism-section-body">
                         @forelse ($section['items'] ?? [] as $index => $item)
-                            <a href="{{ $item['url'] !== '#' ? $item['url'] : 'javascript:void(0)' }}"
-                                class="ism-item {{ $item['url'] === '#' ? 'ism-item--unavailable' : '' }}"
-                                {{ $item['url'] !== '#' ? 'target="_blank"' : '' }}>
-                                <span class="ism-item-number">{{ $index + 1 }}</span>
-                                <span class="ism-item-label">{{ $item['label'] }}</span>
-                                @if ($item['url'] !== '#')
+                            @php
+                                // FIX: ganti javascript:void(0) dengan pola @if/@else yang aman.
+                                // javascript:void(0) melanggar CSP dan merupakan pola lama.
+                                // URL dari JSON admin divalidasi dengan safe_url() terlebih dulu.
+                                $hasUrl    = $item['url'] !== '#';
+                                $safeUrl   = $hasUrl ? safe_url($item['url']) : '#';
+                                $stillSafe = $safeUrl !== '#'; // safe_url() mungkin reject URL berbahaya
+                            @endphp
+
+                            @if ($stillSafe)
+                                <a href="{{ $safeUrl }}"
+                                    class="ism-item"
+                                    target="_blank"
+                                    rel="noopener noreferrer">
+                                    <span class="ism-item-number">{{ $index + 1 }}</span>
+                                    <span class="ism-item-label">{{ $item['label'] }}</span>
                                     <svg class="ism-item-arrow" xmlns="http://www.w3.org/2000/svg" fill="none"
                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round"
                                             d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
                                     </svg>
-                                @else
+                                </a>
+                            @else
+                                {{-- FIX: gunakan <span> bukan <a href="javascript:void(0)"> untuk item belum tersedia --}}
+                                <span class="ism-item ism-item--unavailable">
+                                    <span class="ism-item-number">{{ $index + 1 }}</span>
+                                    <span class="ism-item-label">{{ $item['label'] }}</span>
                                     <span class="ism-item-badge">Segera Hadir</span>
-                                @endif
-                            </a>
+                                </span>
+                            @endif
                         @empty
                             <p class="ism-empty">Belum ada informasi.</p>
                         @endforelse

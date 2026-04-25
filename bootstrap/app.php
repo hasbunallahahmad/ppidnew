@@ -11,9 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Add no-cache middleware to web routes
         $middleware->web(append: [
             \App\Http\Middleware\NoCacheResponse::class,
+            \App\Http\Middleware\SecurityHeaders::class,
+            \Bepsvpt\SecureHeaders\SecureHeadersMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
