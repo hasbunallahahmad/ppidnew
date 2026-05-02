@@ -2,23 +2,17 @@
 
 namespace App\Providers\Filament;
 
-use App\Filament\Pages\Auth\Login;
 use App\Filament\Widgets\AktivitasTerbaruWidget;
 use App\Filament\Widgets\DeadlineWidget;
 use App\Filament\Widgets\PermohonanMasukTableWidget;
 use App\Filament\Widgets\PermohonanStatsWidget;
-use App\Helpers\PexelsHelper;
 use Arseno25\FilamentPrivacyBlur\FilamentPrivacyBlurPlugin;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Carbon\Carbon;
-use Caresome\FilamentAuthDesigner\AuthDesignerPlugin;
-use Caresome\FilamentAuthDesigner\Data\AuthPageConfig;
-use Caresome\FilamentAuthDesigner\Enums\MediaPosition;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
-use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
