@@ -47,7 +47,6 @@ class PpidNewPusdaSmgPanelProvider extends PanelProvider
             ->databaseNotifications()
             ->databaseNotificationsPolling('30s')
             ->sidebarWidth('15rem')
-            // ->subNavigationPosition(SubNavigationPosition::Start)
             ->maxContentWidth(Width::Full)
             ->sidebarCollapsibleOnDesktop()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
@@ -75,7 +74,6 @@ class PpidNewPusdaSmgPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            // ->plugin(\MarcoGermani87\FilamentCaptcha\FilamentCaptcha::make())
             ->plugins([
                 FilamentShieldPlugin::make()
                     ->modelLabel('Model')
@@ -88,15 +86,6 @@ class PpidNewPusdaSmgPanelProvider extends PanelProvider
                     ->navigationGroup('Settings')
                     ->navigationBadgeColor('success')
                     ->registerNavigation(true),
-                // AuthDesignerPlugin::make()
-                //     ->login(
-                //         fn(AuthPageConfig $config) => $config
-                //             ->usingPage(Login::class)
-                //             ->media(PexelsHelper::getDailyImage())
-                //             ->mediaPosition(MediaPosition::Cover)
-                //             ->blur('2'),
-                //     )
-                //     ->themeToggle(),
                 FilamentMenuManagerPlugin::make()
                     ->navigationGroup('Settings'),
                 AutoLogoutPlugin::make()
@@ -112,12 +101,6 @@ class PpidNewPusdaSmgPanelProvider extends PanelProvider
                     ->defaultMode('blur_click'),
                 NewsPlugin::make(),
                 FileManagerPlugin::make()
-                    // Panel sidebar (in Filament navigation)
-                    // ->panelSidebar()
-                    // ->panelSidebarRootLabel('All Files')
-                    // ->panelSidebarHeading('Folders')
-
-                    // File Manager page (database mode)
                     ->fileManager()
                     ->fileManagerPageSidebar(true)
                     ->fileManagerSidebarRootLabel('Root')
@@ -128,8 +111,6 @@ class PpidNewPusdaSmgPanelProvider extends PanelProvider
                         sort: 1,
                         group: 'Content'
                     )
-
-                    // File System page (storage mode, read-only)
                     ->fileSystem()
                     ->fileSystemPageSidebar(true)
                     ->fileSystemSidebarRootLabel('Storage Root')
@@ -140,8 +121,6 @@ class PpidNewPusdaSmgPanelProvider extends PanelProvider
                         sort: 2,
                         group: 'Content'
                     )
-
-                    // Disable demo page
                     ->withoutSchemaExample(),
             ])
             ->authMiddleware([
