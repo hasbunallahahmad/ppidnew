@@ -188,9 +188,9 @@
                                     <span style="color: #d1d5db;">—</span>
                                 </td>
                                 <td style="padding: 8px 16px;">
-                                    <textarea wire:change="updateKeterangan({{ $rowIndex }}, $event.target.value)" rows="3"
-                                        placeholder="HTML keterangan..."
-                                        style="width: 100%; border-radius: 6px; border: 1px solid #d1d5db; padding: 6px 10px; font-size: 0.7rem; font-family: monospace; color: #111827; resize: vertical;">{{ $row['keterangan'] }}</textarea>
+                                    <textarea wire:model="rows.{{ $rowIndex }}.keterangan" rows="3"
+                                        placeholder="Isi keterangan di sini (teks biasa)..."
+                                        style="width: 100%; border-radius: 6px; border: 1px solid #d1d5db; padding: 6px 10px; font-size: 0.75rem; color: #111827; resize: vertical;"></textarea>
                                 </td>
                             </tr>
                         @endif
